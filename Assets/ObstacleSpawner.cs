@@ -5,8 +5,10 @@
 
     public class ObstacleSpawner : MonoBehaviour
     {
-        private List<Transform> obstaclePrefabs;
+        [SerializeField]
+        private Transform scorePointPrefab;
 
+        private List<Transform> obstaclePrefabs;
         private Transform target;
 
         private void Start()
@@ -37,6 +39,7 @@
             var selectedObstacle = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Count)];
 
             selectedObstacle.position = position;
+            Instantiate(scorePointPrefab, position, Quaternion.identity);
         }
     }
 }
