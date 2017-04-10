@@ -1,24 +1,36 @@
 ﻿namespace Assets
 {
     using UnityEngine;
+    using UnityEngine.Networking;
 
-    public class ControlTurning : MonoBehaviour
+    public class ControlTurning : NetworkBehaviour
     {
-        private float turnSpeed = 5f;
+        private float turnSpeed = 270f;
         private float speedDeclineCoefficient = 1.4f;
         private Vector3 turnVelocity;
-        
+
+        private void Start()
+        {
+            if (!isLocalPlayer)
+            {
+                Destroy(this);
+                return;
+            }
+        }
+
         private void Update()
         {
             turnVelocity.x /= speedDeclineCoefficient;
 #if UNITY_EDITOR || UNITY_STANDALONE
+
+        
             if (Input.GetKey(KeyCode.LeftArrow))
             {
-                turnVelocity.x -= turnSpeed;
+                turnVelocity.x -= turnSpeed * Time.deltaTime;
             }
             else if (Input.GetKey(KeyCode.RightArrow))
             {
-                turnVelocity.x += turnSpeed;
+                turnVelocity.x += turnSpeed * Time.deltaTime;
             }
 
 #else
@@ -34,6 +46,7 @@
                 turnVelocity.x += turnSpeed;
             }
 #endif
+
             var newPosition = transform.position + turnVelocity * Time.deltaTime;
             newPosition.x = Mathf.Clamp(
                 newPosition.x,

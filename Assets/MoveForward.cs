@@ -4,11 +4,11 @@ namespace Assets
 {
     public class MoveForward : MonoBehaviour
     {
-        private float speed = 15f;
+        private float speed = 30f;
 
         private void Update()
         {
-            transform.position += speed * Vector3.forward * Time.deltaTime;
+            transform.position += speed * Vector3.forward * Time.smoothDeltaTime;
         }
 
         public float Speed

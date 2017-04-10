@@ -21,7 +21,7 @@
 
         private void Seed()
         {
-            string[] paths = {"Obstacle1", "Obstacle2"};
+            string[] paths = { "Obstacle1", "Obstacle2" };
 
             var obstacle = Instantiate(
                 Resources.Load("Obstacles/" + paths[Random.Range(0, paths.Length)]),

@@ -4,9 +4,10 @@
 
     public class FollowTarget : MonoBehaviour
     {
-        [SerializeField] private GameObject followedObject;
+        [SerializeField]
+        private GameObject followedObject;
 
-        private void Update()
+        private void Start()
         {
             transform.LookAt(followedObject.transform);
         }
