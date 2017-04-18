@@ -1,10 +1,10 @@
-﻿using UnityEngine;
-
-namespace Assets
+﻿namespace Assets
 {
+    using UnityEngine;
+
     public class MoveForward : MonoBehaviour
     {
-        private float speed = 30f;
+        private float speed = 0f;
 
         private void Update()
         {

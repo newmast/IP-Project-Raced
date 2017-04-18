@@ -1,19 +1,35 @@
 ﻿namespace Assets
 {
+    using System;
     using UnityEngine;
+    using UnityEngine.Networking;
     using UnityEngine.SceneManagement;
 
-    public class WinLoseDetector : MonoBehaviour
+    public class WinLoseDetector : NetworkBehaviour
     {
-        [SerializeField] private CanvasGroup start;
-        [SerializeField] private CanvasGroup end;
+        [SerializeField]
+        private CanvasGroup start;
+
+        [SerializeField]
+        private CanvasGroup end;
 
         private bool gameStart;
         private bool gameOver;
 
         public void Start()
         {
-            Time.timeScale = 0;
+            start.alpha = 1;
+            gameStart = true;
+        }
+
+        public override void OnStartClient()
+        {
+            Debug.LogError("clickding");
+        }
+
+        [ClientRpc]
+        public void RpcWaitForReady()
+        {
             start.alpha = 1;
             gameStart = true;
         }
@@ -24,10 +40,9 @@
             {
                 if (Input.GetKey(KeyCode.Space) || Input.touchCount > 0)
                 {
-                    start.alpha = 0;
-                    Time.timeScale = 1;
+                    start.alpha = 1;
                     gameStart = false;
-                }    
+                }
             }
 
             if (gameOver)
@@ -50,10 +65,29 @@
             }
         }
 
+        [Command]
+        private void CmdNotifyReady()
+        {
+            numberOfReadyPlayers++;
+            RpcStartGameForEveryone();
+        }
+
+        [SyncVar]
+        private int numberOfReadyPlayers;
+
+        [ClientRpc]
+        private void RpcStartGameForEveryone()
+        {
+            if (numberOfReadyPlayers == 2 && gameStart)
+            {
+                start.alpha = 0;
+                gameStart = false;
+            }
+        }
+
         public void Lose()
         {
             end.alpha = 1;
-            Time.timeScale = 0;
             gameOver = true;
         }
     }

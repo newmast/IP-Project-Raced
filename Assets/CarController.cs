@@ -1,4 +1,5 @@
-﻿using UnityEngine.Networking;
+﻿using UnityEngine;
+using UnityEngine.Networking;
 
 public class CarController : NetworkBehaviour
 {
@@ -15,13 +16,5 @@ public class CarController : NetworkBehaviour
 
     private void Update()
     {
-
     }
-
-    //[Command]
-    //public void CmdMove()
-    //{
-    //    moveX = x;
-    //    moveY = y;
-    //}
 }
