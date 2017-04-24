@@ -22,8 +22,6 @@
         {
             turnVelocity.x /= speedDeclineCoefficient;
 #if UNITY_EDITOR || UNITY_STANDALONE
-
-        
             if (Input.GetKey(KeyCode.LeftArrow))
             {
                 turnVelocity.x -= turnSpeed * Time.deltaTime;

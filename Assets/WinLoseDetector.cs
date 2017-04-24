@@ -1,11 +1,10 @@
 ﻿namespace Assets
 {
-    using System;
     using UnityEngine;
     using UnityEngine.Networking;
     using UnityEngine.SceneManagement;
 
-    public class WinLoseDetector : NetworkBehaviour
+    public class WinLoseDetector : MonoBehaviour
     {
         [SerializeField]
         private CanvasGroup start;
@@ -13,39 +12,42 @@
         [SerializeField]
         private CanvasGroup end;
 
-        private bool gameStart;
-        private bool gameOver;
+        private bool waitingToStart = true;
+        private bool shouldStartGame;
+        private bool shouldEndGame;
 
-        public void Start()
+        public bool IsWaitingToStart() { return waitingToStart; }
+
+        public bool HasGameStarted() { return shouldStartGame; }
+
+        public bool HasGameEnded() { return shouldEndGame; }
+
+        public void StartGame()
         {
-            start.alpha = 1;
-            gameStart = true;
+            waitingToStart = false;
+            shouldStartGame = true;
         }
 
-        public override void OnStartClient()
+        public void EndGame()
         {
-            Debug.LogError("clickding");
-        }
-
-        [ClientRpc]
-        public void RpcWaitForReady()
-        {
-            start.alpha = 1;
-            gameStart = true;
+            shouldStartGame = false;
+            shouldEndGame = true;
+            end.alpha = 1;
         }
 
         public void Update()
         {
-            if (gameStart)
+            if (waitingToStart)
             {
-                if (Input.GetKey(KeyCode.Space) || Input.touchCount > 0)
-                {
-                    start.alpha = 1;
-                    gameStart = false;
-                }
+                start.alpha = 1;
             }
 
-            if (gameOver)
+            if (shouldStartGame)
+            {
+                start.alpha = 0;
+            }
+
+            if (shouldEndGame)
             {
                 if (Input.GetKey(KeyCode.Space) || Input.touchCount > 0)
                 {
@@ -63,32 +65,6 @@
                     }
                 }
             }
-        }
-
-        [Command]
-        private void CmdNotifyReady()
-        {
-            numberOfReadyPlayers++;
-            RpcStartGameForEveryone();
-        }
-
-        [SyncVar]
-        private int numberOfReadyPlayers;
-
-        [ClientRpc]
-        private void RpcStartGameForEveryone()
-        {
-            if (numberOfReadyPlayers == 2 && gameStart)
-            {
-                start.alpha = 0;
-                gameStart = false;
-            }
-        }
-
-        public void Lose()
-        {
-            end.alpha = 1;
-            gameOver = true;
         }
     }
 }

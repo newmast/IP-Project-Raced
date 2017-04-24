@@ -1,45 +1,41 @@
 ﻿namespace Assets
 {
-    using System.Collections.Generic;
     using UnityEngine;
-
-    public class ObstacleSpawner : MonoBehaviour
+    using UnityEngine.Networking;
+    
+    public class ObstacleSpawner : NetworkBehaviour
     {
         [SerializeField]
         private Transform scorePointPrefab;
+        
+        private static string[] ObstacleIds = { "Obstacle1", "Obstacle2" };
 
-        private List<Transform> obstaclePrefabs;
         private Transform target;
+        private WinLoseDetector winLoseDetector;
 
-        private void Start()
+        public override void OnStartServer()
         {
             target = GameObject.FindGameObjectWithTag(Tags.CameraTarget).transform;
-            obstaclePrefabs = new List<Transform>();
-            Seed();
-            InvokeRepeating("SpawnObstacle", 2, 2f);
+            winLoseDetector = GameObject.FindGameObjectWithTag(Tags.WinLoseDetector).GetComponent<WinLoseDetector>();
+
+            InvokeRepeating("RpcSpawnObstacles", 3, 3);
         }
-
-        private void Seed()
-        {
-            string[] paths = { "Obstacle1", "Obstacle2" };
-
-            var obstacle = Instantiate(
-                Resources.Load("Obstacles/" + paths[Random.Range(0, paths.Length)]),
-                new Vector3(20, 0, 0),
-                Quaternion.identity) as GameObject;
-
-            obstaclePrefabs.Add(obstacle.transform);
-        }
-
-        private void SpawnObstacle()
+        
+        [ClientRpc]
+        private void RpcSpawnObstacles()
         {
             var position = target.position;
             position.z += Constants.RoadLength;
 
-            var selectedObstacle = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Count)];
+            var obstacle = Instantiate(
+                Resources.Load("Obstacles/" + ObstacleIds[Random.Range(0, ObstacleIds.Length)]),
+                position,
+                Quaternion.identity) as GameObject;
+            
+            var scoreObject = Instantiate(scorePointPrefab.gameObject, position, Quaternion.identity) as GameObject;
 
-            selectedObstacle.position = position;
-            Instantiate(scorePointPrefab, position, Quaternion.identity);
+            NetworkServer.Spawn(obstacle);
+            NetworkServer.Spawn(scoreObject);
         }
     }
 }
