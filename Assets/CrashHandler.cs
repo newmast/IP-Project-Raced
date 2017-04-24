@@ -1,18 +1,20 @@
 ﻿namespace Assets
 {
-    using System;
+    using Asset;
     using UnityEngine;
 
     public class CrashHandler : MonoBehaviour
     {
-        public void OnTriggerEnter(Collider other)
+        private ICarCrashListener gameMode;
+
+        private void Start()
         {
-            if (OnCarCrashed != null)
-            {
-                OnCarCrashed.Invoke(other);
-            }
+            gameMode = GameObject.FindGameObjectWithTag(Tags.GameMode).GetComponent<ICarCrashListener>();
         }
 
-        public Action<Collider> OnCarCrashed { get; set; }
+        public void OnTriggerEnter(Collider other)
+        {
+            gameMode.OnCarCrashed(other.gameObject, gameObject);
+        }
     }
 }

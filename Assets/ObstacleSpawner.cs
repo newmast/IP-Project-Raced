@@ -1,22 +1,23 @@
 ﻿namespace Assets
 {
+    using Asset;
     using UnityEngine;
     using UnityEngine.Networking;
-    
+
     public class ObstacleSpawner : NetworkBehaviour
     {
         [SerializeField]
         private Transform scorePointPrefab;
         
-        private static string[] ObstacleIds = { "Obstacle1", "Obstacle2" };
-
         private Transform target;
         private WinLoseDetector winLoseDetector;
+        private IObstacleProvider obstacleProvider;
 
         public override void OnStartServer()
         {
             target = GameObject.FindGameObjectWithTag(Tags.CameraTarget).transform;
             winLoseDetector = GameObject.FindGameObjectWithTag(Tags.WinLoseDetector).GetComponent<WinLoseDetector>();
+            obstacleProvider = GameObject.FindGameObjectWithTag(Tags.GameMode).GetComponent<IObstacleProvider>();
 
             InvokeRepeating("RpcSpawnObstacles", 3, 3);
         }
@@ -27,8 +28,10 @@
             var position = target.position;
             position.z += Constants.RoadLength;
 
+            int randomObstacleIndex = Random.Range(0, obstacleProvider.AllowedObstacles.Count);
+
             var obstacle = Instantiate(
-                Resources.Load("Obstacles/" + ObstacleIds[Random.Range(0, ObstacleIds.Length)]),
+                Resources.Load(obstacleProvider.DirectoryName + "/" + obstacleProvider.AllowedObstacles[randomObstacleIndex]),
                 position,
                 Quaternion.identity) as GameObject;
             

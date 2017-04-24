@@ -1,28 +1,37 @@
 ﻿namespace Asset
 {
     using System;
+    using System.Collections.Generic;
     using Assets;
     using UnityEngine;
     using UnityEngine.Networking;
 
-    public class SurvivalMode : NetworkBehaviour, ICarCrashListener
+    public class SurvivalMode : NetworkBehaviour, ICarCrashListener, IObstacleProvider
     {
         private WinLoseDetector winLose;
         private CrashHandler crashHandler;
 
+        public string DirectoryName
+        {
+            get { return "Obstacles"; }
+        }
+
+        public List<string> AllowedObstacles { get; private set; }
+
+        private void Awake()
+        {
+            AllowedObstacles = new List<string> { "Obstacle1", "Obstacle2" };
+        }
+
         private void Start()
         {
             winLose = GameObject.FindGameObjectWithTag(Tags.WinLoseDetector).GetComponent<WinLoseDetector>();
-
-
-            //other.gameObject.GetComponent<MoveForward>().Speed = 0;
-            GameObject.FindGameObjectWithTag(Tags.WinLoseDetector).GetComponent<WinLoseDetector>().EndGame();
-
         }
 
         public void OnCarCrashed(GameObject car, GameObject rock)
         {
-            throw new NotImplementedException();
+            car.GetComponent<MoveForward>().Speed = 0;
+            GameObject.FindGameObjectWithTag(Tags.WinLoseDetector).GetComponent<WinLoseDetector>().EndGame();
         }
     }
 }

@@ -48,6 +48,7 @@
         private Transform GetLastInLine(Transform[] pool)
         {
             Transform lastInLine = pool[0].transform;
+
             for (var i = 1; i < pool.Length; i++)
             {
                 var minZ = lastInLine.transform.position.z;
