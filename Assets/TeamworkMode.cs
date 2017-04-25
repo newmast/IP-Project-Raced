@@ -3,11 +3,13 @@
     using Asset;
     using System.Collections.Generic;
     using UnityEngine;
-    using System;
+    using UnityEngine.Networking;
 
-    public class TeamworkMode : MonoBehaviour, IObstacleProvider, ICoinGathering
+    public class TeamworkMode : NetworkBehaviour, IObstacleProvider, ICoinGathering
     {
         private WinLoseDetector winLose;
+
+        [SyncVar]
         private int coinPile;
 
         private void Awake()
@@ -47,9 +49,13 @@
             coinPile += numberOfCoins;
         }
 
-        public void OnCoinTaken()
+        public void OnCoinTaken(GameObject car, GameObject coin)
         {
             coinPile--;
+
+            var raceController = car.GetComponent<RaceLifetimeController>();
+            raceController.OnCoinTaken(coin);
         }
+
     }
 }

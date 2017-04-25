@@ -25,8 +25,7 @@
 
         private void OnTriggerEnter(Collider other)
         {
-            coinGatherer.OnCoinTaken();
-            Destroy(gameObject);
+            coinGatherer.OnCoinTaken(other.gameObject, gameObject);
         }
     }
 }

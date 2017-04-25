@@ -8,7 +8,12 @@
 
         private float speed = 0f;
 
-        public void Start()
+        private void Awake()
+        {
+            SpeedCoeffiecient = 1;
+        }
+
+        private void Start()
         {
             winLose = GameObject.FindGameObjectWithTag(Tags.WinLoseDetector).GetComponent<WinLoseDetector>();
         }
@@ -20,7 +25,7 @@
                 speed = 5f;
             }
 
-            transform.position += speed * Vector3.forward * Time.smoothDeltaTime;
+            transform.position += SpeedCoeffiecient * speed * Vector3.forward * Time.smoothDeltaTime;
         }
 
         public float Speed
@@ -28,5 +33,7 @@
             get { return speed; }
             set { speed = value; }
         }
+
+        public float SpeedCoeffiecient { get; set; }
     }
 }

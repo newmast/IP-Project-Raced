@@ -29,4 +29,30 @@ public class RaceLifetimeController : NetworkBehaviour {
     {
         winLose.StartGame();
     }
+
+    public void OnCoinTaken(GameObject coin)
+    {
+        var netId = coin.GetComponent<NetworkIdentity>().netId;
+        if (isServer)
+        {
+            RpcDestroyCoin(netId);
+        }
+        else
+        {
+            CmdOnCoinTaken(netId);
+        }
+    }
+
+    [Command]
+    public void CmdOnCoinTaken(NetworkInstanceId id)
+    {
+        RpcDestroyCoin(id);
+    }
+
+    [ClientRpc]
+    public void RpcDestroyCoin(NetworkInstanceId id)
+    {
+        var coin = ClientScene.FindLocalObject(id);
+        Destroy(coin);
+    }
 }

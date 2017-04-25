@@ -11,7 +11,6 @@ public class ChaseMode : NetworkBehaviour, ICarCrashListener, IObstacleProvider
 
     private bool hasInitialized;
     private MoveForward moveForward;
-    private float previousSpeed;
 
     private GameObject[] cars;
 
@@ -70,15 +69,16 @@ public class ChaseMode : NetworkBehaviour, ICarCrashListener, IObstacleProvider
     public void OnCarCrashed(GameObject car, GameObject rock)
     {
         moveForward = car.GetComponent<MoveForward>();
-        previousSpeed = moveForward.Speed;
 
-        moveForward.Speed *= 0.9f;
+        moveForward.SpeedCoeffiecient = 0.5f;
 
         Invoke("RestoreCarSpeed", 2);
+
+        throw new System.Exception("" + moveForward.Speed);
     }
 
     private void RestoreCarSpeed()
     {
-        moveForward.Speed = previousSpeed;
+        moveForward.SpeedCoeffiecient = 1;
     }
 }

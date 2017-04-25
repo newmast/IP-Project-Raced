@@ -11,13 +11,6 @@
         private WinLoseDetector winLose;
         private CrashHandler crashHandler;
 
-        public string DirectoryName
-        {
-            get { return "Obstacles"; }
-        }
-
-        public List<string> AllowedObstacles { get; private set; }
-
         private void Awake()
         {
             AllowedObstacles = new List<string> { "Obstacle1", "Obstacle2" };
@@ -27,6 +20,13 @@
         {
             winLose = GameObject.FindGameObjectWithTag(Tags.WinLoseDetector).GetComponent<WinLoseDetector>();
         }
+
+        public string DirectoryName
+        {
+            get { return "Obstacles"; }
+        }
+
+        public List<string> AllowedObstacles { get; private set; }
 
         public void OnCarCrashed(GameObject car, GameObject rock)
         {

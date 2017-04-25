@@ -1,4 +1,6 @@
-﻿namespace Assets
+﻿using UnityEngine;
+
+namespace Assets
 {
     public interface ICoinGathering
     {
@@ -6,7 +8,7 @@
 
         void AddCoinsToTotalPile(int numberOfCoins);
 
-        void OnCoinTaken();
+        void OnCoinTaken(GameObject car, GameObject coin);
 
         void OnCoinMissed();
     }
