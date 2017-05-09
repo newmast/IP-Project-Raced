@@ -1,15 +1,15 @@
 ﻿namespace Asset
 {
-    using System;
     using System.Collections.Generic;
     using Assets;
     using UnityEngine;
     using UnityEngine.Networking;
 
-    public class SurvivalMode : NetworkBehaviour, ICarCrashListener, IObstacleProvider
+    public class SurvivalMode : MonoBehaviour, ICarCrashListener, IObstacleProvider
     {
         private WinLoseDetector winLose;
         private CrashHandler crashHandler;
+        private NetworkInstanceId loserId;
 
         private void Awake()
         {
@@ -30,8 +30,8 @@
 
         public void OnCarCrashed(GameObject car, GameObject rock)
         {
-            car.GetComponent<MoveForward>().Speed = 0;
-            GameObject.FindGameObjectWithTag(Tags.WinLoseDetector).GetComponent<WinLoseDetector>().EndGame();
+            winLose.EndGame(new List<GameObject> { car });
         }
+        
     }
 }

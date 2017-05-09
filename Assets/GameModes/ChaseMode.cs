@@ -8,9 +8,11 @@ public class ChaseMode : NetworkBehaviour, ICarCrashListener, IObstacleProvider
 {
     private const float EscapeeWinDistance = 10f;
     private WinLoseDetector winLose;
+    private Transform target;
 
     private bool hasInitialized;
     private MoveForward moveForward;
+    private bool gameEnded;
 
     private GameObject[] cars;
 
@@ -26,7 +28,7 @@ public class ChaseMode : NetworkBehaviour, ICarCrashListener, IObstacleProvider
 
     private void Update()
     {
-        if (winLose.HasGameStarted() && !hasInitialized)
+        if (winLose.HasGameStarted() && !hasInitialized && !gameEnded)
         {
             hasInitialized = true;
             cars = GameObject.FindGameObjectsWithTag("Player");
@@ -55,26 +57,23 @@ public class ChaseMode : NetworkBehaviour, ICarCrashListener, IObstacleProvider
     }
 
     public List<string> AllowedObstacles { get; private set; }
-
+    
     public void PoliceWin()
     {
-
+        winLose.EndGame(new List<GameObject> { cars[0] });
     }
 
     public void EscapeeWin()
     {
-
+        winLose.EndGame(new List<GameObject> { cars[1] });
     }
 
     public void OnCarCrashed(GameObject car, GameObject rock)
     {
         moveForward = car.GetComponent<MoveForward>();
-
         moveForward.SpeedCoeffiecient = 0.5f;
 
-        Invoke("RestoreCarSpeed", 2);
-
-        throw new System.Exception("" + moveForward.Speed);
+        Invoke("RestoreCarSpeed", 1);
     }
 
     private void RestoreCarSpeed()

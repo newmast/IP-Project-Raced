@@ -13,7 +13,7 @@
         private WinLoseDetector winLoseDetector;
         private IObstacleProvider obstacleProvider;
 
-        public override void OnStartServer()
+        public void Start()
         {
             target = GameObject.FindGameObjectWithTag(Tags.CameraTarget).transform;
             winLoseDetector = GameObject.FindGameObjectWithTag(Tags.WinLoseDetector).GetComponent<WinLoseDetector>();
@@ -26,7 +26,7 @@
         private void RpcSpawnObstacles()
         {
             var position = target.position;
-            position.z += Constants.RoadLength;
+            position.z += Constants.RoadLength * 2;
 
             int randomObstacleIndex = Random.Range(0, obstacleProvider.AllowedObstacles.Count);
 
@@ -39,6 +39,12 @@
 
             NetworkServer.Spawn(obstacle);
             NetworkServer.Spawn(scoreObject);
+        }
+
+        public Transform ScorePointPrefab
+        {
+            get { return scorePointPrefab; }
+            set { scorePointPrefab = value; }
         }
     }
 }

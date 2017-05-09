@@ -2,19 +2,22 @@
 {
     using Asset;
     using System.Collections.Generic;
+    using System.Linq;
     using UnityEngine;
     using UnityEngine.Networking;
 
     public class TeamworkMode : NetworkBehaviour, IObstacleProvider, ICoinGathering
     {
-        private WinLoseDetector winLose;
-
         [SyncVar]
         private int coinPile;
+
+        private WinLoseDetector winLose;
+        private bool gameEnded;
 
         private void Awake()
         {
             AllowedObstacles = new List<string>() { "Coins1" };
+            NumberOfCoinPrefabsToSpawn = 10;
         }
 
         private void Start()
@@ -24,7 +27,11 @@
 
         private void Update()
         {
-
+            if (NumberOfCoinPrefabsToSpawn <= 0 && !gameEnded)
+            {
+                gameEnded = true;
+                winLose.EndGame(null);
+            }
         }
 
         public string DirectoryName
@@ -34,14 +41,11 @@
 
         public List<string> AllowedObstacles { get; private set; }
 
-        public int NumberOfCoinPrefabsToSpawn
-        {
-            get { return 10; }
-        }
+        public int NumberOfCoinPrefabsToSpawn { get; set; }
 
         public void OnCoinMissed()
         {
-            // Lose game
+            winLose.EndGame(GameObject.FindGameObjectsWithTag("Player").ToList());
         }
 
         public void AddCoinsToTotalPile(int numberOfCoins)
@@ -51,11 +55,10 @@
 
         public void OnCoinTaken(GameObject car, GameObject coin)
         {
-            coinPile--;
-
             var raceController = car.GetComponent<RaceLifetimeController>();
             raceController.OnCoinTaken(coin);
-        }
 
+            coinPile--;
+        }
     }
 }

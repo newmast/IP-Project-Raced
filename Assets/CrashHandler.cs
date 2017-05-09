@@ -9,11 +9,15 @@
 
         private void Start()
         {
-            gameMode = GameObject.FindGameObjectWithTag(Tags.GameMode).GetComponent<ICarCrashListener>();
         }
 
         public void OnTriggerEnter(Collider other)
         {
+            if (gameMode == null)
+            {
+                gameMode = GameObject.FindGameObjectWithTag(Tags.GameMode).GetComponent<ICarCrashListener>();
+            }
+
             gameMode.OnCarCrashed(other.gameObject, gameObject);
         }
     }

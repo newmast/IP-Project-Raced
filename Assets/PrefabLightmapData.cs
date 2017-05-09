@@ -55,7 +55,7 @@ public class PrefabLightmapData : MonoBehaviour
             existsAlready = false;
             for (int j = 0; j < settingslightmaps.Length; j++)
             {
-                if (lightmaps[i] == settingslightmaps[j].lightmapFar)
+                if (lightmaps[i] == settingslightmaps[j].lightmapColor)
                 {
                     lightmapArrayOffsetIndex[i] = j;
                     existsAlready = true;
@@ -65,8 +65,8 @@ public class PrefabLightmapData : MonoBehaviour
             {
                 lightmapArrayOffsetIndex[i] = counter + settingslightmaps.Length;
                 var newLightmapData = new LightmapData();
-                newLightmapData.lightmapFar = lightmaps[i];
-                newLightmapData.lightmapNear = lightmaps2[i];
+                newLightmapData.lightmapColor = lightmaps[i];
+                newLightmapData.lightmapDir = lightmaps2[i];
                 combinedLightmaps.Add(newLightmapData);
                 ++counter;
             }
@@ -78,8 +78,8 @@ public class PrefabLightmapData : MonoBehaviour
             for (int i = 0; i < combinedLightmaps.Count; i++)
             {
                 combinedLightmaps2[i + settingslightmaps.Length] = new LightmapData();
-                combinedLightmaps2[i + settingslightmaps.Length].lightmapFar = combinedLightmaps[i].lightmapFar;
-                combinedLightmaps2[i + settingslightmaps.Length].lightmapNear = combinedLightmaps[i].lightmapNear;
+                combinedLightmaps2[i + settingslightmaps.Length].lightmapColor = combinedLightmaps[i].lightmapColor;
+                combinedLightmaps2[i + settingslightmaps.Length].lightmapDir = combinedLightmaps[i].lightmapDir;
             }
         }
         ApplyRendererInfo(rendererInfo, lightmapArrayOffsetIndex);
@@ -186,8 +186,8 @@ public class PrefabLightmapData : MonoBehaviour
                 info.renderer = new List<Renderer>();
                 info.renderer.Add(renderer);
                 info.lightmapOffsetScale = renderer.lightmapScaleOffset;
-                Texture2D lightmap = LightmapSettings.lightmaps[renderer.lightmapIndex].lightmapFar;
-                Texture2D lightmap2 = LightmapSettings.lightmaps[renderer.lightmapIndex].lightmapNear;
+                Texture2D lightmap = LightmapSettings.lightmaps[renderer.lightmapIndex].lightmapColor;
+                Texture2D lightmap2 = LightmapSettings.lightmaps[renderer.lightmapIndex].lightmapDir;
                 int sceneLightmapIndex = AddLightmap(scenePath, resourcePath, renderer.lightmapIndex, lightmap, lightmap2);
                 info.lightmapIndex = lightmaps.IndexOf(sceneLightmaps[sceneLightmapIndex].lightmap);
                 if (info.lightmapIndex == -1)

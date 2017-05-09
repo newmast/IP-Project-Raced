@@ -5,7 +5,6 @@
     public class MoveForward : MonoBehaviour
     {
         private WinLoseDetector winLose;
-
         private float speed = 0f;
 
         private void Awake()
@@ -27,13 +26,7 @@
 
             transform.position += SpeedCoeffiecient * speed * Vector3.forward * Time.smoothDeltaTime;
         }
-
-        public float Speed
-        {
-            get { return speed; }
-            set { speed = value; }
-        }
-
+        
         public float SpeedCoeffiecient { get; set; }
     }
 }

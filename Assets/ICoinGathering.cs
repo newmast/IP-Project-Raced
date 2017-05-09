@@ -4,7 +4,7 @@ namespace Assets
 {
     public interface ICoinGathering
     {
-        int NumberOfCoinPrefabsToSpawn { get; }
+        int NumberOfCoinPrefabsToSpawn { get; set; }
 
         void AddCoinsToTotalPile(int numberOfCoins);
 

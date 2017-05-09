@@ -11,5 +11,10 @@
         {
             transform.LookAt(followedObject.transform);
         }
+
+        private void Update()
+        {
+
+        }
     }
 }
